@@ -4,16 +4,20 @@ import java.text.DecimalFormat;
 import java.util.Map.Entry;
 import javax.swing.JTextArea;
 
+import org.jfree.chart.ChartPanel;
+
 public class MCButtonClickListener implements ActionListener {
 
 	CGButtonClickListener cgbcl;
 	JTextArea textArea;
+	ChartPanel chartPanel;
 	boolean next;
 	
-	MCButtonClickListener(boolean next, JTextArea textArea, CGButtonClickListener cgbcl) {
+	MCButtonClickListener(boolean next, JTextArea textArea, ChartPanel chartPanel, CGButtonClickListener cgbcl) {
 		this.cgbcl=cgbcl;
 		this.textArea=textArea;
 		this.next=next;
+		this.chartPanel=chartPanel;
 	}
 
 	@Override
@@ -37,6 +41,7 @@ public class MCButtonClickListener implements ActionListener {
 						textArea.append("\n"+format);
 					}
 					textArea.append("\nHit any key to proceed to the next building...");
+					chartPanel.setChart(new BarChartGenerator().makeMonthChart("Monthly Consumption: "+building.getValue().getBuildingName(), building.getValue().getMonthlyConsumption()));
 					while (!next) {
 						try {
 							Thread.sleep(250);

@@ -13,17 +13,17 @@ public class CGButtonClickListener implements ActionListener {
 	JTextArea textArea;
 	JLabel cglabel;	
 	Campus campus;
-	JLabel aclabel1;
-	JLabel mclabel1;
-	JLabel dclabel1;
+	JButton acButton;
+	JButton mcButton;
+	JButton dcButton;
 	
-	CGButtonClickListener(JTextArea textArea, JButton cgButton, JLabel cglabel, JLabel aclabel1, JLabel mclabel1, JLabel dclabel1, Campus campus) {
+	CGButtonClickListener(JTextArea textArea, JButton cgButton, JLabel cglabel, JButton acButton, JButton mcButton, JButton dcButton, Campus campus) {
 		this.cgButton = cgButton;
 		this.textArea=textArea;
 		this.cglabel=cglabel;
-		this.aclabel1=aclabel1;
-		this.mclabel1=mclabel1;
-		this.dclabel1=dclabel1;
+		this.acButton=acButton;
+		this.mcButton=mcButton;
+		this.dcButton=dcButton;
 		this.campus=campus;
 	}
 
@@ -55,9 +55,9 @@ public class CGButtonClickListener implements ActionListener {
 									campus = new Campus(da.generateBuildingMap());
 									textArea.append("Campus Generated!");
 									cglabel.setText("Campus Generated");
-									aclabel1.setText("Annual Consumption Ready");
-									mclabel1.setText("Monthly Consumption Ready");
-									dclabel1.setText("Daily Consumption Ready");
+									acButton.setText("Show Annual Consumption");
+									mcButton.setText("Show Monthly Consumption");
+									dcButton.setText("Show Daily Consumption");
 									cgButton.setText("Read Input File");
 								}
 							});
