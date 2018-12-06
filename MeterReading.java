@@ -1,6 +1,3 @@
-import java.util.Calendar;
-import java.util.Date;
-
 public class MeterReading {
 	
 	private String buildingName;

@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.Map.Entry;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.jfree.chart.ChartPanel;
 
@@ -11,13 +12,13 @@ public class DCButtonClickListener implements ActionListener {
 	CGButtonClickListener cgbcl;
 	JTextArea textArea;
 	ChartPanel chartPanel;
-	boolean next;
+	JTextField current;
 	
-	DCButtonClickListener(boolean next, JTextArea textArea, ChartPanel chartPanel, CGButtonClickListener cgbcl) {
+	DCButtonClickListener(boolean next, JTextArea textArea, ChartPanel chartPanel, CGButtonClickListener cgbcl, JTextField current) {
 		this.cgbcl=cgbcl;
 		this.textArea=textArea;
-		this.next=next;
 		this.chartPanel=chartPanel;
+		this.current=current;
 	}
 
 	@Override
@@ -28,10 +29,9 @@ public class DCButtonClickListener implements ActionListener {
 		    @Override
 		    public void run() 
 		    {
-		    	for (Entry<String, Building> building : cgbcl.campus.getPortfolio().entrySet()) {
-					textArea.append("\n\n"+building.getKey()+":\n");
+					textArea.append("\n\n"+current.getText()+":\n");
 					textArea.append(String.format("%10s %15s %15s %15s %15s", "Date", "Elec", "Steam", "CHW", "Total"));
-					for (Entry<String,MeterReading> element : building.getValue().getDailyConsumption().entrySet()) {
+					for (Entry<String,MeterReading> element : cgbcl.campus.getPortfolio().get(current.getText()).getDailyConsumption().entrySet()) {
 						DecimalFormat formatConsumption = new DecimalFormat("###,###,###,###,###,###");
 						String formatElec = formatConsumption.format(element.getValue().getElecKbtu());
 						String formatStm = formatConsumption.format(element.getValue().getSteamKbtu());
@@ -40,20 +40,7 @@ public class DCButtonClickListener implements ActionListener {
 						String format = String.format("%10s %15s %15s %15s %15s", element.getKey().substring(element.getKey().length()-10), formatElec, formatStm, formatChw, formatTot);
 						textArea.append("\n"+format);
 					}
-					textArea.append("\nHit any key to proceed to the next building...");
-					chartPanel.setChart(new BarChartGenerator().makeMonthChart("Daily Consumption: "+building.getValue().getBuildingName(), building.getValue().getDailyConsumption()));
-					while (!next) {
-						try {
-							Thread.sleep(250);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					next=false;
-					textArea.setText("Current number of buildings: "+cgbcl.campus.getPortfolio().size());
-					textArea.append("Printing Daily Consumption...");
-				}
+					chartPanel.setChart(new BarChartGenerator().makeMonthChart("Daily Consumption: "+current.getText(), cgbcl.campus.getPortfolio().get(current.getText()).getDailyConsumption()));
 				textArea.append("\nDaily Consumption Printed!");
 		    }
 		};

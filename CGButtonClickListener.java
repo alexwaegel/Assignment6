@@ -1,11 +1,16 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import org.jfree.chart.ChartPanel;
 
 public class CGButtonClickListener implements ActionListener {
 
@@ -13,11 +18,13 @@ public class CGButtonClickListener implements ActionListener {
 	JTextArea textArea;
 	JLabel cglabel;	
 	Campus campus;
+	JTextField current;
 	JButton acButton;
 	JButton mcButton;
 	JButton dcButton;
+	ChartPanel chartPanel;
 	
-	CGButtonClickListener(JTextArea textArea, JButton cgButton, JLabel cglabel, JButton acButton, JButton mcButton, JButton dcButton, Campus campus) {
+	CGButtonClickListener(JTextArea textArea, JButton cgButton, JLabel cglabel, JButton acButton, JButton mcButton, JButton dcButton, Campus campus, JTextField current, ChartPanel chartPanel) {
 		this.cgButton = cgButton;
 		this.textArea=textArea;
 		this.cglabel=cglabel;
@@ -25,6 +32,8 @@ public class CGButtonClickListener implements ActionListener {
 		this.mcButton=mcButton;
 		this.dcButton=dcButton;
 		this.campus=campus;
+		this.current=current;
+		this.chartPanel=chartPanel;
 	}
 
 	@Override
@@ -53,12 +62,25 @@ public class CGButtonClickListener implements ActionListener {
 								@Override
 							    public void run() {
 									campus = new Campus(da.generateBuildingMap());
+									current.setText(campus.getPortfolio().firstEntry().getKey());
 									textArea.append("Campus Generated!");
 									cglabel.setText("Campus Generated");
 									acButton.setText("Show Annual Consumption");
 									mcButton.setText("Show Monthly Consumption");
 									dcButton.setText("Show Daily Consumption");
 									cgButton.setText("Read Input File");
+									textArea.append("\n\n"+current.getText()+":\n");
+						    		textArea.append(String.format("%10s %15s %15s %15s %15s", "Date", "Elec", "Steam", "CHW", "Total"));
+									for (Entry<String,MeterReading> element : campus.getPortfolio().get(current.getText()).getMonthlyConsumption().entrySet()) {
+										DecimalFormat formatConsumption = new DecimalFormat("###,###,###,###,###,###");
+										String formatElec = formatConsumption.format(element.getValue().getElecKbtu());
+										String formatStm = formatConsumption.format(element.getValue().getSteamKbtu());
+										String formatChw = formatConsumption.format(element.getValue().getChwKbtu());
+										String formatTot = formatConsumption.format(element.getValue().getElecKbtu()+element.getValue().getChwKbtu()+element.getValue().getSteamKbtu());
+										String format = String.format("%10s %15s %15s %15s %15s", element.getKey().substring(element.getKey().length()-7), formatElec, formatStm, formatChw, formatTot);
+										textArea.append("\n"+format);
+									}
+									chartPanel.setChart(new BarChartGenerator().makeMonthChart("Monthly Consumption: "+current.getText(), campus.getPortfolio().get(current.getText()).getMonthlyConsumption()));
 								}
 							});
 						} 

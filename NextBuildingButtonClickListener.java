@@ -1,25 +1,22 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
 
 public class NextBuildingButtonClickListener implements ActionListener {
 
-	MCButtonClickListener mcbcl;
-	DCButtonClickListener dcbcl;
+	CGButtonClickListener cgbcl;
+	JTextField current;
 	
-	NextBuildingButtonClickListener(MCButtonClickListener mcbcl, DCButtonClickListener dcbcl) {
-		this.mcbcl=mcbcl;
-		this.dcbcl=dcbcl;
+	NextBuildingButtonClickListener(CGButtonClickListener cgbcl, JTextField current) {
+		this.cgbcl=cgbcl;
+		this.current=current;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		SwingUtilities.invokeLater(new Runnable() 
-		{
-		    @Override
-		    public void run() 
-		    {mcbcl.next = true;
-		    dcbcl.next = true;}
-		});
+		
+		if (current.getText().equals(cgbcl.campus.getPortfolio().lastEntry().getKey())) {current.setText(cgbcl.campus.getPortfolio().firstEntry().getKey());}
+		else {current.setText(cgbcl.campus.getPortfolio().higherEntry(current.getText()).getKey());}
+		current.getAction();
 	}
 }
