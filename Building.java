@@ -59,7 +59,49 @@ public class Building {
 		monthlyConsumption = monthly;
 		annualConsumption = annual;
 	}
-
+	
+	/**
+	 * This method returns the electric consumption per sqft for a building
+	 * 
+	 * @param fiscalYear the Fiscal year as a String
+	 * @return the electric consumption in kBtu per sqft for a building
+	 */
+	public double getElecKbtuPerSqft(String fiscalYear) {
+		double result=0;
+		if (this.getAnnualConsumption().containsKey(fiscalYear) && this.getBuildingArea()>0) {
+				result=this.getAnnualConsumption().get(fiscalYear).getElecKbtu()/this.getBuildingArea();
+		}
+		return result;
+	}
+	
+	/**
+	 * This method returns the steam consumption per sqft for a building
+	 * 
+	 * @param fiscalYear the Fiscal year as a String
+	 * @return the steam consumption in kBtu per sqft for a building
+	 */
+	public double getSteamKbtuPerSqft(String fiscalYear) {
+		double result = 0;
+		if (this.getAnnualConsumption().containsKey(fiscalYear) && this.getBuildingArea()>0) {
+			result=this.getAnnualConsumption().get(fiscalYear).getSteamKbtu()/this.getBuildingArea();
+		}
+		return result;
+	}
+	
+	/**
+	 * This method returns the electric consumption per sqft for a building
+	 * 
+	 * @param fiscalYear the Fiscal year as a String
+	 * @return the electric consumption in kBtu per sqft for a building
+	 */
+	public double getChwKbtuPerSqft(String fiscalYear) {
+		double result = 0;
+		if (this.getAnnualConsumption().containsKey(fiscalYear) && this.getBuildingArea()>0) {
+			result=this.getAnnualConsumption().get(fiscalYear).getChwKbtu()/this.getBuildingArea();
+		}
+		return result;
+	}
+	
 	/**
 	 * Returns the building area
 	 * 
