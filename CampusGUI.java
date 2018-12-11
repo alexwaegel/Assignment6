@@ -1,20 +1,16 @@
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 
 public class CampusGUI {
 
@@ -22,8 +18,6 @@ public class CampusGUI {
 		
 		// Initialize starting conditions
 		Campus campus = new Campus(new TreeMap<>());
-		String currentBuilding = null;
-		boolean next = false;
 		
 		// Create Frame
 		JFrame frame = new JFrame();
@@ -67,23 +61,23 @@ public class CampusGUI {
 		JButton nextBuilding = new JButton("Next Building");
 		JButton previousBuilding = new JButton("Prev. Building");
 		JButton goToBuilding = new JButton("Go To Building");
-		JTextField goTo = new JTextField("<Type Building Name>");
+		JComboBox<String> goTo = new JComboBox<String>(new String[] {"<Select Building>"});
 		JLabel currentLabel = new JLabel("Current Building: ", JLabel.RIGHT);
 		JTextField current = new JTextField("No Building");
 		
 		
 		// Button Listeners		
 		// Campus Generation Button Listener
-		CGButtonClickListener cgbcl = new CGButtonClickListener(textArea, cgButton, cgLabel1, acButton, mcButton, dcButton, campus, current, chartPanel);
+		CGButtonClickListener cgbcl = new CGButtonClickListener(textArea, cgButton, cgLabel1, acButton, mcButton, dcButton, campus, current, chartPanel, goTo);
 		cgButton.addActionListener(cgbcl);
 		
 		
 		// Annual Consumption Button Listener
-		ACButtonClickListener acbcl = new ACButtonClickListener(textArea, cgbcl);
+		ACButtonClickListener acbcl = new ACButtonClickListener(textArea, cgbcl, chartPanel);
 		acButton.addActionListener(acbcl);
 		
 		// Monthly Consumption Button Listener
-		MCButtonClickListener mcbcl = new MCButtonClickListener(next, textArea, chartPanel, cgbcl, current);
+		MCButtonClickListener mcbcl = new MCButtonClickListener(textArea, chartPanel, cgbcl, current);
 		mcButton.addActionListener(mcbcl);
 		nextBuilding.addActionListener(mcbcl);
 		previousBuilding.addActionListener(mcbcl);
@@ -91,7 +85,7 @@ public class CampusGUI {
 		goToBuilding.addActionListener(mcbcl);
 		
 		// Daily Consumption Button Listener
-		DCButtonClickListener dcbcl = new DCButtonClickListener(next, textArea, chartPanel, cgbcl, current);
+		DCButtonClickListener dcbcl = new DCButtonClickListener(textArea, chartPanel, cgbcl, current);
 		dcButton.addActionListener(dcbcl);
 		
 		// Next Building Button Listener
@@ -103,7 +97,7 @@ public class CampusGUI {
 		previousBuilding.addActionListener(pbbcl);
 		
 		// GoTo Building Button Listener
-		GoToBuildingButtonClickListener gtbcl = new GoToBuildingButtonClickListener(cgbcl, goTo.getText(), current);
+		GoToBuildingButtonClickListener gtbcl = new GoToBuildingButtonClickListener(cgbcl, goTo, current);
 		goToBuilding.addActionListener(gtbcl);
 		
 		// GoTo Building Button Listener
@@ -131,7 +125,6 @@ public class CampusGUI {
 		rightButtons.add(dcButton); 
 		rightButtons.add(new JLabel());
 	
-		
 		leftButtons.add(cgButton);
 		leftButtons.add(goToBuilding);
 		leftButtons.add(goTo);
@@ -139,6 +132,7 @@ public class CampusGUI {
 		leftButtons.add(firstBuilding);
 		leftButtons.add(previousBuilding);
 		leftButtons.add(nextBuilding);
+		
 		leftSide.add(leftButtons, BorderLayout.PAGE_START);
 		leftSide.add(new JScrollPane(textArea), BorderLayout.CENTER);
 		
